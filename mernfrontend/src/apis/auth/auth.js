@@ -1,15 +1,19 @@
 import axios from "axios";
+import { baseUrl } from "../../config/endpoints";
 
 const signin = async (user) => {
+  const data = JSON.stringify(user);
+  console.log("user", data);
   try {
-    let response = await axios.post("/auth/signin", user, {
+    let response = await axios.post(`${baseUrl}/auth/signin`, data, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      withCredentials: true,
+      // withCredentials: true,
     });
-    return response.json();
+    console.log("sign in response", response);
+    return response;
   } catch (err) {
     console.log("sign in error", err);
   }
@@ -17,7 +21,7 @@ const signin = async (user) => {
 
 const signout = async () => {
   try {
-    let response = await axios.get("/auth/signout");
+    let response = await axios.get(`${baseUrl}/auth/signout`);
     return response.json();
   } catch (err) {
     console.log("signout error", err);
