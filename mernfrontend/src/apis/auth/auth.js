@@ -22,7 +22,7 @@ const signin = async (user) => {
 const signout = async () => {
   try {
     let response = await axios.get(`${baseUrl}/auth/signout`);
-    return response.json();
+    return response;
   } catch (err) {
     console.log("signout error", err);
   }

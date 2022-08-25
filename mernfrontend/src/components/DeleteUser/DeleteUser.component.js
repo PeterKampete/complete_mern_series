@@ -15,20 +15,19 @@ import { Navigate } from "react-router-dom";
 import { clearJWT, isAuthenticated } from "../../apis/auth/auth-helper";
 import { remove } from "../../apis/user/user";
 
-const DeleteUser = (props) => {
+const DeleteUser = ({ userId, token }) => {
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
-  const jwt = isAuthenticated();
   const clickButton = () => {
     setOpen(true);
   };
   const deleteAccount = () => {
     remove(
       {
-        userId: props.userId,
+        userId: userId,
       },
-      { t: jwt.token }
+      { t: token }
     ).then((data) => {
       if (data && data.error) {
         console.log(data.error);

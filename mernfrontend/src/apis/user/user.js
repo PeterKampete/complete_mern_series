@@ -42,15 +42,16 @@ const read = async (params, credentials) => {
 };
 
 const update = async (params, credentials, user) => {
+  const data = JSON.stringify(user);
   try {
-    let response = await axios.put(`${userUrl}${params.userId}`, {
+    let response = await axios.put(`${userUrl}/${params.userId}`, data, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${credentials.t}`,
       },
-      body: JSON.stringify(user),
     });
+    console.log("updated", response);
     return response;
   } catch (err) {
     console.log("update error", err);

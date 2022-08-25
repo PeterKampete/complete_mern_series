@@ -2,18 +2,12 @@ import React from "react";
 import { Route, Navigate, useLocation } from "react-router-dom";
 import { isAuthenticated } from "../../apis/auth/auth-helper";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ children, ...rest }) => {
   let location = useLocation();
-  <Route
-    {...rest}
-    element={(props) =>
-      isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Navigate to="/signin" state={{ from: location }} replace />
-      )
-    }
-  />;
+  if (!isAuthenticated()) {
+    <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+  return children;
 };
 
 export default PrivateRoute;

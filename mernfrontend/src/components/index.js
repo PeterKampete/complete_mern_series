@@ -5,3 +5,4 @@ export { default as Signup } from "./Signup/Signup.component";
 export { default as Signin } from "./Signin/Signin.component";
 export { default as Profile } from "./Profile/Profile.component";
 export { default as DeleteUser } from "./DeleteUser/DeleteUser.component";
+export { default as EditProfile } from "./EditProfile/EditProfile.component";

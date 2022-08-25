@@ -39,7 +39,7 @@ const Users = () => {
       <List>
         {users.map((item, i) => {
           return (
-            <Link style={{ textDecoration: 'none', textTransform: 'uppercase' }} to={"/user/" + item._id} key={i}>
+            <Link style={{ textDecoration: 'none', textTransform: 'uppercase' }} to={`/user/${item._id}`} key={i}>
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar>

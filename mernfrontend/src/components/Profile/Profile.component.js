@@ -19,31 +19,37 @@ import { isAuthenticated } from "../../apis/auth/auth-helper";
 import { read } from "../../apis/user/user";
 import { useStyles } from "./Profile.styles.js";
 
-const Profile = ({ match }) => {
+const Profile = () => {
   const classes = useStyles();
   const params = useParams();
 
   const { userId } = params;
   const [user, setUser] = useState({});
   const [userData, setUserData] = useState([]);
+  const [token, setToken] = useState("");
   const [redirectToSignin, setRedirectToSignin] = useState(false);
 
   useEffect(() => {
     const jwt = isAuthenticated();
-    const { token, user } = jwt.data;
-    setUserData(user)
-    read(
-      {
-        userId: userId,
-      },
-      { t: token }
-    ).then(({ data }) => {
-      if (data && data.error) {
-        setRedirectToSignin(true);
-      } else {
-        setUser(data);
-      }
-    });
+    if (!jwt) {
+      setRedirectToSignin(true);
+    } else {
+      const { token, user } = jwt.data;
+      setToken(token);
+      setUserData(user);
+      read(
+        {
+          userId: userId,
+        },
+        { t: token }
+      ).then(({ data }) => {
+        if (data && data.error) {
+          setRedirectToSignin(true);
+        } else {
+          setUser(data);
+        }
+      });
+    }
   }, [userId]);
 
   if (redirectToSignin) {
@@ -70,7 +76,7 @@ const Profile = ({ match }) => {
                   <Edit />
                 </IconButton>
               </Link>
-              <DeleteUser userId={user._id} />
+              <DeleteUser token={token} userId={user._id} />
             </ListItemSecondaryAction>
           )}
         </ListItem>
