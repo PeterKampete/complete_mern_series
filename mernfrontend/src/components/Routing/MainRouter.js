@@ -8,10 +8,12 @@ import {
   Profile,
   EditProfile,
   PrivateRoute,
+  Menu,
 } from "../../components";
 const MainRouter = () => {
   return (
-    <div>
+    <>
+      <Menu />
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/users" element={<Users />} />
@@ -28,7 +30,7 @@ const MainRouter = () => {
         />
         <Route exact path="/user/:userId" element={<Profile />} />
       </Routes>
-    </div>
+    </>
   );
 };
 export default MainRouter;
