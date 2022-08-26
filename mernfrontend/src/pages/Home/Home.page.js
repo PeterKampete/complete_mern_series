@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  unicornbikeImg,
 } from "@material-ui/core";
 import { bgImg } from "../../assets/images";
 const Home = () => {

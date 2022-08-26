@@ -1,16 +1,16 @@
-import React, { createContext } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import { AuthProvider } from "./Context/AuthProvider";
 import reportWebVitals from "./reportWebVitals";
 
-const Context = createContext();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Context.Provider values={{ user: "Kampete" }}>
+    <AuthProvider>
       <App />
-    </Context.Provider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

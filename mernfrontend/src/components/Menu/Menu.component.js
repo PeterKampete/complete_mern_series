@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -11,8 +11,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { clearJWT, isAuthenticated } from "../../apis/auth/auth-helper";
 
 const Menu = () => {
-  const { user } = useContext();
-  console.log("the user", user);
   const navigate = useNavigate();
   const [id, setId] = useState();
   const [authData, setAuthData] = useState();
