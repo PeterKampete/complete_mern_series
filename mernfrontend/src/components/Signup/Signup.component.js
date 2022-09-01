@@ -39,7 +39,7 @@ const Signup = () => {
       email,
       password,
     };
-    create(user).then((data) => {
+    create(user).then(({ data }) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {

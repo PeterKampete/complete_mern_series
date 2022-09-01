@@ -9,26 +9,11 @@ import {
 import HomeIcon from "@material-ui/icons/Home";
 import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { clearJWT, isAuthenticated } from "../../apis/auth/auth-helper";
-import { useAuthContext } from "../../Context/useAuthContext";
 
 const Menu = () => {
-  const { userData } = useAuthContext();
-  console.log('userData', userData);
   const navigate = useNavigate();
-  const [id, setId] = useState('');
-  const [authData, setAuthData] = useState(null);
   const location = useLocation();
-  useEffect(() => {
-    console.log('datatatat', userData)
-    if (userData) {
-      setAuthData(userData);
-      const { user } = userData.data;
-      const anId = user._id;
-      setId(anId);
-    } else {
-      setAuthData(null);
-    }
-  }, [userData]);
+  const { data } = isAuthenticated();
   const isActive = (location, path) => {
     if (location.pathname === path) return { color: "#ff4081" };
     else return { color: "#ffffff" };
@@ -47,7 +32,7 @@ const Menu = () => {
         <Link to="/users">
           <Button style={isActive(location, "/users")}>Users</Button>
         </Link>
-        {!authData && (
+        {!isAuthenticated() && (
           <span>
             <Link to="/signup">
               <Button style={isActive(location, "/signup")}>Sign up</Button>
@@ -57,10 +42,10 @@ const Menu = () => {
             </Link>
           </span>
         )}
-        {authData && (
+        {isAuthenticated() && (
           <span>
-            <Link to={"/user/" + id}>
-              <Button style={isActive(location, "/user/" + id)}>
+            <Link to={"/user/" + data.user._id}>
+              <Button style={isActive(location, "/user/" + data.user._id)}>
                 My Profile
               </Button>
             </Link>
@@ -68,7 +53,6 @@ const Menu = () => {
               color="inherit"
               onClick={() => {
                 clearJWT(() => navigate("/"));
-                setAuthData(null);
               }}
             >
               Sign out

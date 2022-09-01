@@ -15,9 +15,10 @@ import {
 
 import { Edit, Person } from "@material-ui/icons";
 import { DeleteUser } from "../../components";
-import { isAuthenticated } from "../../apis/auth/auth-helper";
 import { read } from "../../apis/user/user";
 import { useStyles } from "./Profile.styles.js";
+import { useAuthContext } from "../../Context/useAuthContext";
+import { isAuthenticated } from "../../apis/auth/auth-helper";
 
 const Profile = () => {
   const classes = useStyles();
@@ -25,23 +26,20 @@ const Profile = () => {
 
   const { userId } = params;
   const [user, setUser] = useState({});
-  const [userData, setUserData] = useState([]);
-  const [token, setToken] = useState("");
+  const [data, setData] = useState([]);
   const [redirectToSignin, setRedirectToSignin] = useState(false);
 
   useEffect(() => {
     const jwt = isAuthenticated();
-    if (!jwt) {
-      setRedirectToSignin(true);
-    } else {
-      const { token, user } = jwt.data;
-      setToken(token);
-      setUserData(user);
+    if (jwt) {
+      const { data } = jwt;
+      setData(data);
+
       read(
         {
           userId: userId,
         },
-        { t: token }
+        { t: data?.token }
       ).then(({ data }) => {
         if (data && data.error) {
           setRedirectToSignin(true);
@@ -49,7 +47,7 @@ const Profile = () => {
           setUser(data);
         }
       });
-    }
+    } else setRedirectToSignin(true);
   }, [userId]);
 
   if (redirectToSignin) {
@@ -69,14 +67,14 @@ const Profile = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={user.name} secondary={user.email} />
-          {userData && userData._id === user._id && (
+          {data.user && data.user._id === user._id && (
             <ListItemSecondaryAction>
               <Link to={"/user/edit/" + user._id}>
                 <IconButton aria-label="Edit" color="primary">
                   <Edit />
                 </IconButton>
               </Link>
-              <DeleteUser token={token} userId={user._id} />
+              <DeleteUser userId={user._id} />
             </ListItemSecondaryAction>
           )}
         </ListItem>

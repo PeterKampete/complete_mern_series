@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   IconButton,
@@ -11,11 +11,12 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { clearJWT, isAuthenticated } from "../../apis/auth/auth-helper";
 import { remove } from "../../apis/user/user";
+import { useAuthContext } from "../../Context/useAuthContext";
 
-const DeleteUser = ({ userId, token }) => {
+const DeleteUser = ({ userId }) => {
   const [open, setOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
@@ -23,12 +24,14 @@ const DeleteUser = ({ userId, token }) => {
     setOpen(true);
   };
   const deleteAccount = () => {
+    const jwt = isAuthenticated();
+    const { data } = jwt;
     remove(
       {
         userId: userId,
       },
-      { t: token }
-    ).then((data) => {
+      { t: data.token }
+    ).then(({data}) => {
       if (data && data.error) {
         console.log(data.error);
       } else {

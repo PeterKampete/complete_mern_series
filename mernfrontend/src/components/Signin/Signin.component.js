@@ -42,7 +42,7 @@ const Signin = (props) => {
     };
     console.log('useinfo', user)
     signin(user)
-      .then((data) => {
+      .then(({data}) => {
         console.log("sign in data", data);
         authenticate(data, () => {
           setValues({ ...values, error: "", redirectToReferrer: true });

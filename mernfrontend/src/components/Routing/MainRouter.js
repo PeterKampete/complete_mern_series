@@ -10,10 +10,12 @@ import {
   PrivateRoute,
   Menu,
 } from "../../components";
+import { useAuthContext } from "../../Context/useAuthContext";
 const MainRouter = () => {
+  const { userData } = useAuthContext();
   return (
     <>
-      <Menu />
+      <Menu userData={userData} />
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/users" element={<Users />} />

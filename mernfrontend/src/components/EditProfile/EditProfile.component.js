@@ -15,79 +15,60 @@ import { isAuthenticated } from "../../apis/auth/auth-helper";
 import { useStyles } from "./EditProfile.styles.js";
 import { read, update } from "../../apis/user/user";
 import { useAuthContext } from "../../Context/useAuthContext";
+import defaultPhoto from "../../assets/images/background.jpg";
 
 const EditProfile = () => {
   const classes = useStyles();
   const params = useParams();
-  const userData = isAuthenticated();
-  const { token, user } = userData.data;
 
   const { userId } = params;
   const [values, setValues] = useState({
     name: "",
-    about: "",
-    photo: "",
-    email: "",
     password: "",
-    redirectToProfile: false,
+    email: "",
+    open: false,
     error: "",
-    id: "",
+    redirectToProfile: '',
+    id: ''
   });
 
-  useEffect(() => {
-    read(
-      {
-        userId: userId,
-      },
-      { t: token }
-    ).then(({ data }) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setValues({
-          ...values,
-          id: data._id,
-          name: data.name,
-          email: data.email,
-          about: data.about,
-        });
-      }
-    });
-  }, [token]);
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
+  };
 
   const handleSubmit = () => {
-    const { name, email, password, about, photo } = values;
-    let userData = new FormData();
-    name && userData.append("name", name);
-    email && userData.append("email", email);
-    password && userData.append("password", password);
-    about && userData.append("about", about);
-    photo && userData.append("photo", photo);
-
+    const jwt = isAuthenticated();
+    const { data } = jwt;
+    const user = {
+      name: values.name || undefined,
+      email: values.email || undefined,
+      password: values.password || undefined,
+    };
     update(
       {
         userId: userId,
       },
       {
-        t: token,
+        t: data.token,
       },
-      userData
+      user
     ).then(({ data }) => {
-      console.log("editData", data);
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, redirectToProfile: true });
+        setValues({ ...values, id: data._id, redirectToProfile: true });
       }
     });
   };
-  const handleChange = (name) => (event) => {
-    const value = name === "photo" ? event.target.files[0] : event.target.value;
-    setValues({ ...values, [name]: value });
-  };
-  const photoUrl = values.id
-    ? `/api/users/photo/${values.id}?${new Date().getTime()}`
-    : "/api/users/defaultPhoto";
+  // const handleChange = (name) => (event) => {
+  //   const value = event.target.value;
+  //   setValues({ ...values, [name]: value });
+  // const value = name === "photo" ? event.target.files[0] : event.target.value;
+  // setValues({ ...values, [name]: value });
+  // };
+  // const photoUrl = values.id
+  //   ? `/api/users/photo/${values.id}?${new Date().getTime()}`
+  //   : "/api/users/defaultPhoto";
 
   if (values.redirectToProfile) {
     return <Navigate to={"/user/" + values.id} />;
@@ -98,7 +79,7 @@ const EditProfile = () => {
         <Typography variant="h6" className={classes.title}>
           Edit Profile
         </Typography>
-        <Avatar src={photoUrl} className={classes.bigAvatar} />
+        <Avatar className={classes.bigAvatar} />
         <br />
         <input
           accept="image/*"
@@ -123,17 +104,6 @@ const EditProfile = () => {
           className={classes.textField}
           value={values.name}
           onChange={handleChange("name")}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="multiline-flexible"
-          label="About"
-          multiline
-          minRows="2"
-          value={values.about}
-          onChange={handleChange("about")}
-          className={classes.textField}
           margin="normal"
         />
         <br />

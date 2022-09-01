@@ -45,9 +45,10 @@ const read = async (params, credentials) => {
 
 const update = async (params, credentials, user) => {
   const { userId } = params;
+  const userData = JSON.stringify(user);
   console.log("user the ID", userId);
   try {
-    let response = await axios.put(`${userUrl}/${userId}`, user, {
+    let response = await axios.put(`${userUrl}/${userId}`, userData, {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${credentials.t}`,
