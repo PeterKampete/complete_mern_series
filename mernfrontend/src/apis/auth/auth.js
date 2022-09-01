@@ -3,7 +3,6 @@ import { baseUrl } from "../../config/endpoints";
 
 const signin = async (user) => {
   const data = JSON.stringify(user);
-  console.log("user", data);
   try {
     let response = await axios.post(`${baseUrl}/auth/signin`, data, {
       headers: {

@@ -2,11 +2,11 @@ import { useContext } from "react";
 import AuthContext from "./AuthContext";
 
 export const useAuthContext = () => {
-  const user = useContext(AuthContext);
+  const userData = useContext(AuthContext);
 
-  if(user === undefined || user === null) {
+  if(userData === undefined || userData === null) {
     throw new Error("AuthContext Error");
   }
 
-  return user;
+  return userData;
 };

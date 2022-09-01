@@ -18,6 +18,7 @@ import { useStyles } from "./Signup.styles.js";
 import { create } from "../../apis/user/user.js";
 
 const Signup = () => {
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const [values, setValues] = useState({
     name: "",
@@ -42,9 +43,14 @@ const Signup = () => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ name: "", email: "", password: "", error: "", open: true });
+        setValues({ name: "", email: "", password: "", error: "" });
+        setOpen(true);
       }
     });
+  };
+
+  const handleRequestClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -103,14 +109,7 @@ const Signup = () => {
           </Button>
         </CardActions>
       </Card>
-      <Dialog
-        open={values.open}
-        onClose={(event, reason) =>
-          reason === "backdropClick"
-            ? setValues({ ...values, error: "", open: false })
-            : true
-        }
-      >
+      <Dialog open={open} onClose={handleRequestClose}>
         <DialogTitle>New Account</DialogTitle>
         <DialogContent>
           <DialogContentText>

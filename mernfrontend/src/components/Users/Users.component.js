@@ -21,10 +21,9 @@ const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    list().then((user) => {
-      const { data } = user;
-      if (user && user.error) {
-        console.log(user.error);
+    list().then(({ data }) => {
+      if (data && data.error) {
+        console.log(data.error);
       } else {
         setUsers(data);
       }
@@ -39,7 +38,11 @@ const Users = () => {
       <List>
         {users.map((item, i) => {
           return (
-            <Link style={{ textDecoration: 'none', textTransform: 'uppercase' }} to={`/user/${item._id}`} key={i}>
+            <Link
+              style={{ textDecoration: "none", textTransform: "uppercase" }}
+              to={`/user/${item._id}`}
+              key={i}
+            >
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar>

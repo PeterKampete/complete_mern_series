@@ -1,16 +1,19 @@
 import { useState, useffect, useEffect } from "react";
+import { isAuthenticated } from "../apis/auth/auth-helper";
 import AuthContext from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     // const currentUser = getUser();
+    const user = isAuthenticated();
+    console.log('currentUser', user);
 
-    setUser("currentUser");
+    setUserData(user);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ userData }}>{children}</AuthContext.Provider>
   );
 };

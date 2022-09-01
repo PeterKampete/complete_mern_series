@@ -1,3 +1,4 @@
+import { LocalCafe } from "@material-ui/icons";
 import axios from "axios";
 import { userUrl } from "../../config/endpoints";
 
@@ -27,8 +28,9 @@ const list = async () => {
 };
 
 const read = async (params, credentials) => {
+  const { userId } = params;
   try {
-    let response = await axios.get(`${userUrl}/${params.userId}`, {
+    let response = await axios.get(`${userUrl}/${userId}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -42,12 +44,12 @@ const read = async (params, credentials) => {
 };
 
 const update = async (params, credentials, user) => {
-  const data = JSON.stringify(user);
+  const { userId } = params;
+  console.log("user the ID", userId);
   try {
-    let response = await axios.put(`${userUrl}/${params.userId}`, data, {
+    let response = await axios.put(`${userUrl}/${userId}`, user, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
         Authorization: `Bearer ${credentials.t}`,
       },
     });
@@ -58,9 +60,10 @@ const update = async (params, credentials, user) => {
   }
 };
 
-const remove = async (params, credentials, user) => {
+const remove = async (params, credentials) => {
+  const { userId } = params;
   try {
-    let response = await axios.delete(`${userUrl}/${params.userId}`, {
+    let response = await axios.delete(`${userUrl}/${userId}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

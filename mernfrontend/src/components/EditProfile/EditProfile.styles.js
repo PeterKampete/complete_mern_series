@@ -24,4 +24,15 @@ export const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginBottom: theme.spacing(2),
   },
+  bigAvatar: {
+    width: 60,
+    height: 60,
+    margin: "auto",
+  },
+  input: {
+    display: "none",
+  },
+  filename: {
+    marginLeft: "10px",
+  },
 }));

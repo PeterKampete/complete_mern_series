@@ -7,28 +7,32 @@ import {
   TextField,
   Typography,
   Icon,
+  Avatar,
 } from "@material-ui/core";
+import FileUpload from "@material-ui/icons/AddPhotoAlternate";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { isAuthenticated } from "../../apis/auth/auth-helper";
 import { useStyles } from "./EditProfile.styles.js";
 import { read, update } from "../../apis/user/user";
+import { useAuthContext } from "../../Context/useAuthContext";
 
 const EditProfile = () => {
   const classes = useStyles();
   const params = useParams();
+  const userData = isAuthenticated();
+  const { token, user } = userData.data;
 
   const { userId } = params;
   const [values, setValues] = useState({
     name: "",
-    password: "",
+    about: "",
+    photo: "",
     email: "",
-    open: false,
-    error: "",
+    password: "",
     redirectToProfile: false,
+    error: "",
+    id: "",
   });
-
-  const jwt = isAuthenticated();
-  const { token, user } = jwt.data;
 
   useEffect(() => {
     read(
@@ -40,18 +44,26 @@ const EditProfile = () => {
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, name: data.name, email: data.email });
+        setValues({
+          ...values,
+          id: data._id,
+          name: data.name,
+          email: data.email,
+          about: data.about,
+        });
       }
     });
   }, [token]);
 
   const handleSubmit = () => {
-    const { name, email, password } = values;
-    const user = {
-      name,
-      email,
-      password,
-    };
+    const { name, email, password, about, photo } = values;
+    let userData = new FormData();
+    name && userData.append("name", name);
+    email && userData.append("email", email);
+    password && userData.append("password", password);
+    about && userData.append("about", about);
+    photo && userData.append("photo", photo);
+
     update(
       {
         userId: userId,
@@ -59,22 +71,26 @@ const EditProfile = () => {
       {
         t: token,
       },
-      user
+      userData
     ).then(({ data }) => {
+      console.log("editData", data);
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        const {name, email} = data;
-        setValues({name, email, userId: data._id, redirectToProfile: true });
+        setValues({ ...values, redirectToProfile: true });
       }
     });
   };
-  const handleChange = name => event => {
-    setValues({...values, [name]: event.target.value})
-  }
+  const handleChange = (name) => (event) => {
+    const value = name === "photo" ? event.target.files[0] : event.target.value;
+    setValues({ ...values, [name]: value });
+  };
+  const photoUrl = values.id
+    ? `/api/users/photo/${values.id}?${new Date().getTime()}`
+    : "/api/users/defaultPhoto";
 
   if (values.redirectToProfile) {
-    return <Navigate to={"/user/" + values.userId} />;
+    return <Navigate to={"/user/" + values.id} />;
   }
   return (
     <Card className={classes.card}>
@@ -82,12 +98,42 @@ const EditProfile = () => {
         <Typography variant="h6" className={classes.title}>
           Edit Profile
         </Typography>
+        <Avatar src={photoUrl} className={classes.bigAvatar} />
+        <br />
+        <input
+          accept="image/*"
+          onChange={handleChange("photo")}
+          className={classes.input}
+          id="icon-button-file"
+          type="file"
+        />
+        <label htmlFor="icon-button-file">
+          <Button variant="contained" color="default" component="span">
+            Upload
+            <FileUpload />
+          </Button>
+        </label>{" "}
+        <span className={classes.filename}>
+          {values.photo ? values.photo.name : ""}
+        </span>
+        <br />
         <TextField
           id="name"
           label="Name"
           className={classes.textField}
           value={values.name}
           onChange={handleChange("name")}
+          margin="normal"
+        />
+        <br />
+        <TextField
+          id="multiline-flexible"
+          label="About"
+          multiline
+          minRows="2"
+          value={values.about}
+          onChange={handleChange("about")}
+          className={classes.textField}
           margin="normal"
         />
         <br />

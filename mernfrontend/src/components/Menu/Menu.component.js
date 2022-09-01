@@ -7,23 +7,28 @@ import {
   Button,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { clearJWT, isAuthenticated } from "../../apis/auth/auth-helper";
+import { useAuthContext } from "../../Context/useAuthContext";
 
 const Menu = () => {
+  const { userData } = useAuthContext();
+  console.log('userData', userData);
   const navigate = useNavigate();
-  const [id, setId] = useState();
-  const [authData, setAuthData] = useState();
+  const [id, setId] = useState('');
+  const [authData, setAuthData] = useState(null);
   const location = useLocation();
   useEffect(() => {
-    let jwtData = isAuthenticated();
-    if (jwtData) {
-      setAuthData(jwtData);
-      const { user } = jwtData.data;
+    console.log('datatatat', userData)
+    if (userData) {
+      setAuthData(userData);
+      const { user } = userData.data;
       const anId = user._id;
       setId(anId);
-    } else setAuthData(null);
-  }, []);
+    } else {
+      setAuthData(null);
+    }
+  }, [userData]);
   const isActive = (location, path) => {
     if (location.pathname === path) return { color: "#ff4081" };
     else return { color: "#ffffff" };

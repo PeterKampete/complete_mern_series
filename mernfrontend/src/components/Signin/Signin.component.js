@@ -21,12 +21,16 @@ import { authenticate } from "../../apis/auth/auth-helper";
 
 const Signin = (props) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const [values, setValues] = useState({
     email: "",
     password: "",
     error: "",
     redirectToReferrer: false,
   });
+  const handleRequestClose = () => {
+    setOpen(false);
+  };
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
@@ -36,17 +40,20 @@ const Signin = (props) => {
       email,
       password,
     };
+    console.log('useinfo', user)
     signin(user)
       .then((data) => {
+        console.log("sign in data", data);
         authenticate(data, () => {
           setValues({ ...values, error: "", redirectToReferrer: true });
+          setOpen(true);
         });
       })
       .catch((err) => {
         if (err) {
           setValues({ ...values, error: err });
           console.log("data error", err);
-          return
+          return;
         }
       });
   };
@@ -106,14 +113,7 @@ const Signin = (props) => {
           </Button>
         </CardActions>
       </Card>
-      <Dialog
-        open={values.open}
-        onClose={(event, reason) =>
-          reason === "backdropClick"
-            ? setValues({ ...values, error: "", open: false })
-            : true
-        }
-      >
+      <Dialog open={open} onClose={handleRequestClose}>
         <DialogTitle>New Account</DialogTitle>
         <DialogContent>
           <DialogContentText>

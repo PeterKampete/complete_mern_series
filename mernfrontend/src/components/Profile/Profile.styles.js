@@ -11,4 +11,9 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     color: theme.palette.protectedTitle,
   },
+  bigAvatar: {
+    width: 60,
+    height: 60,
+    margin: 10,
+  },
 }));
