@@ -14,6 +14,7 @@ const Menu = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = isAuthenticated();
+  console.log(data);
   const isActive = (location, path) => {
     if (location.pathname === path) return { color: "#ff4081" };
     else return { color: "#ffffff" };
