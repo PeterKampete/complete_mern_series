@@ -4,7 +4,7 @@ import AuthContext from "./AuthContext";
 export const useAuthContext = () => {
   const userData = useContext(AuthContext);
 
-  if(userData === undefined || userData === null) {
+  if (userData === undefined || userData === null) {
     throw new Error("AuthContext Error");
   }
 
